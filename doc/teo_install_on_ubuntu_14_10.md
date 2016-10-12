@@ -17,6 +17,7 @@ git clone --recursive https://github.com/roboticslab-uc3m/teo-main.git  # Downlo
 cd teo-main; mkdir build; cd build; cmake ..  # Configure the teo-main software
 make  # Compile
 sudo make install  # Install :-)
+sudo ldconfig  # Update shared libs db
 cp ../scripts/gnome/teo-main.desktop $HOME/Desktop
 ```
 
