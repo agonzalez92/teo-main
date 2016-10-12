@@ -4,7 +4,10 @@
 # Contrib: Ugo; Paul Fitzpatrick (YARP device examples and tutorials)
 # CopyPolicy: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
 
-YARP_PREPARE_DEVICE(CartesianControlServer TYPE teo::CartesianControlServer INCLUDE CartesianControlServer.hpp WRAPPER CartesianControlServer)
+yarp_prepare_device(CartesianControlServer
+                    TYPE teo::CartesianControlServer
+                    INCLUDE CartesianControlServer.hpp
+                    WRAPPER CartesianControlServer)
 
 IF (NOT SKIP_CartesianControlServer)
 
@@ -13,9 +16,20 @@ FIND_PACKAGE(YARP REQUIRED)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${TEO_INCLUDE_DIRS})
 
-YARP_ADD_PLUGIN(CartesianControlServer CartesianControlServer.hpp CartesianControlServer.cpp DeviceDriverImpl.cpp)
+yarp_add_plugin(CartesianControlServer CartesianControlServer.hpp CartesianControlServer.cpp DeviceDriverImpl.cpp)
+
 TARGET_LINK_LIBRARIES(CartesianControlServer ${YARP_LIBRARIES})
-install(TARGETS CartesianControlServer DESTINATION lib)
+
+#install(TARGETS CartesianControlServer DESTINATION lib)
+yarp_install(TARGETS CartesianControlServer
+             EXPORT YARP
+             COMPONENT runtime
+             LIBRARY DESTINATION ${YARP_DYNAMIC_PLUGINS_INSTALL_DIR}
+             ARCHIVE DESTINATION ${YARP_STATIC_PLUGINS_INSTALL_DIR})
+
+yarp_install(FILES CartesianControlServer.ini
+             COMPONENT runtime
+             DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
 #set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")

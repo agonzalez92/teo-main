@@ -24,16 +24,16 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${orocos_kdl_INCLUDE_DIRS} ${GAI
 # Set up our library.
 if (folder_source)
   add_library(${KEYWORD} ${folder_source} ${folder_header})
-  target_link_libraries(${KEYWORD} ${TEO_LIBRARIES} ${orocos_kdl_LIBRARIES} ${GAIT_LIBRARIES})
+  target_link_libraries(${KEYWORD} ${TEO_LIBRARIES} ${orocos_kdl_LIBRARIES} ${GAIT_LIBRARIES} KdlVectorConverterLib)
   install(TARGETS ${KEYWORD} DESTINATION lib)
 else (folder_source)
   message(FATAL_ERROR "No source code files found. Please add something")
 endif (folder_source)
 
 # Exporting dependencies for ASIBOTConfig.cmake quite manually for now... 
-set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended header dirs")
+set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended header dirs")
 set(TEO_LINK_DIRS ${TEO_LINK_DIRS} ${GAIT_LINK_DIRS} CACHE INTERNAL "appended libraries")
-set(TEO_LIBRARIES ${TEO_LIBRARIES} ${KEYWORD} CACHE INTERNAL "appended libraries")
+set(TEO_LIBRARIES ${TEO_LIBRARIES} ${KEYWORD} KdlVectorConverterLib CACHE INTERNAL "appended libraries")
 
 ENDIF (ENABLE_TrajectoryLib)
 

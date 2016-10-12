@@ -7,9 +7,6 @@
 YARP_PREPARE_DEVICE(KdlSolver
                     TYPE teo::KdlSolver
                     INCLUDE KdlSolver.hpp)
-yarp_install(FILES KdlSolver.ini
-             COMPONENT runtime
-             DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 IF (NOT SKIP_KdlSolver)
 
@@ -17,11 +14,13 @@ SET(CMAKE_MODULE_PATH ${TEO_MODULE_PATH} ${CMAKE_MODULE_PATH})
 FIND_PACKAGE(YARP REQUIRED)
 FIND_PACKAGE(orocos_kdl REQUIRED)
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS})
+#INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${orocos_kdl_INCLUDE_DIRS} ${TEO_INCLUDE_DIRS})
 
 yarp_add_plugin(KdlSolver KdlSolver.hpp DeviceDriverImpl.cpp ICartesianSolverImpl.cpp)
 
-TARGET_LINK_LIBRARIES(KdlSolver ${YARP_LIBRARIES} ${orocos_kdl_LIBRARIES})
+#TARGET_LINK_LIBRARIES(KdlSolver ${YARP_LIBRARIES} ${orocos_kdl_LIBRARIES})
+TARGET_LINK_LIBRARIES(KdlSolver ${orocos_kdl_LIBRARIES} KdlVectorConverterLib)
 
 #install(TARGETS KdlSolver DESTINATION lib)
 yarp_install(TARGETS KdlSolver
@@ -30,9 +29,12 @@ yarp_install(TARGETS KdlSolver
              LIBRARY DESTINATION ${YARP_DYNAMIC_PLUGINS_INSTALL_DIR}
              ARCHIVE DESTINATION ${YARP_STATIC_PLUGINS_INSTALL_DIR})
 
+yarp_install(FILES KdlSolver.ini
+             COMPONENT runtime
+             DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
+
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
 #set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
-set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS} CACHE INTERNAL "appended libraries")
 #set(TEO_LIBRARIES ${TEO_LIBRARIES} TeoYarp KdlSolver ${orocos_kdl_LIBRARIES} CACHE INTERNAL "appended libraries")
 
 ENDIF (NOT SKIP_KdlSolver)

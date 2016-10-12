@@ -28,6 +28,6 @@ else (folder_source)
 endif (folder_source)
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
-set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended header dirs")
+set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} ${orocos_kdl_INCLUDE_DIRS} CACHE INTERNAL "appended header dirs")
 set(TEO_LIBRARIES ${TEO_LIBRARIES} ${KEYWORD} CACHE INTERNAL "appended libraries")
 

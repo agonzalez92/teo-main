@@ -1,7 +1,10 @@
 # Copyright: (C) 2013 Universidad Carlos III de Madrid
 # Author: Juan G. Victores
 
-YARP_PREPARE_DEVICE(FakeControlboardOR TYPE teo::FakeControlboardOR INCLUDE FakeControlboardOR.hpp WRAPPER controlboardwrapper2)
+yarp_prepare_device(FakeControlboardOR
+                    TYPE teo::FakeControlboardOR
+                    INCLUDE FakeControlboardOR.hpp
+                    WRAPPER controlboardwrapper2)
 
 IF (NOT SKIP_FakeControlboardOR)
 
@@ -21,12 +24,23 @@ endif()
 
 LINK_DIRECTORIES(${TEO_LINK_DIRS})
 
-YARP_ADD_PLUGIN(FakeControlboardOR FakeControlboardOR.hpp DeviceDriverImpl.cpp IControlLimitsImpl.cpp IControlModeImpl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp SharedArea.cpp RateThreadImpl.cpp)
+yarp_add_plugin(FakeControlboardOR FakeControlboardOR.hpp DeviceDriverImpl.cpp IControlLimitsImpl.cpp IControlModeImpl.cpp IEncodersImpl.cpp IEncodersTimedImpl.cpp IPositionImpl.cpp IPosition2Impl.cpp IVelocityImpl.cpp IVelocity2Impl.cpp ITorqueImpl.cpp SharedArea.cpp RateThreadImpl.cpp)
+
 set_target_properties(${KEYWORD} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXXFLAGS}")
 set_target_properties(${KEYWORD} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
+
 TARGET_LINK_LIBRARIES(FakeControlboardOR ${OpenRAVE_LIBRARIES} ${OpenRAVE_CORE_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${YARP_LIBRARIES})
 
-install(TARGETS FakeControlboardOR DESTINATION lib)
+#install(TARGETS FakeControlboardOR DESTINATION lib)
+yarp_install(TARGETS FakeControlboardOR
+             EXPORT YARP
+             COMPONENT runtime
+             LIBRARY DESTINATION ${YARP_DYNAMIC_PLUGINS_INSTALL_DIR}
+             ARCHIVE DESTINATION ${YARP_STATIC_PLUGINS_INSTALL_DIR})
+
+yarp_install(FILES FakeControlboardOR.ini
+             COMPONENT runtime
+             DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
 set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")  ## small exception
