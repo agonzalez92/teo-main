@@ -55,6 +55,7 @@ script:
   - sudo make install
   - sudo ldconfig
   - yarp plugin --list
+  - yarp plugin --verbose KdlSolver
   - bin/testKdlSolver
   - bin/testKdlSolverFromFile
   - bin/testBasicCartesianControl
