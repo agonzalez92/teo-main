@@ -4,7 +4,12 @@
 # Contrib: Ugo; Paul Fitzpatrick (YARP device examples and tutorials)
 # CopyPolicy: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
 
-YARP_PREPARE_DEVICE(KdlSolver TYPE teo::KdlSolver INCLUDE KdlSolver.hpp)
+YARP_PREPARE_DEVICE(KdlSolver
+                    TYPE teo::KdlSolver
+                    INCLUDE KdlSolver.hpp)
+yarp_install(FILES KdlSolver.ini
+             COMPONENT runtime
+             DESTINATION ${YARP_PLUGIN_MANIFESTS_INSTALL_DIR})
 
 IF (NOT SKIP_KdlSolver)
 
@@ -14,9 +19,16 @@ FIND_PACKAGE(orocos_kdl REQUIRED)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR} ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS})
 
-YARP_ADD_PLUGIN(KdlSolver KdlSolver.hpp DeviceDriverImpl.cpp ICartesianSolverImpl.cpp)
+yarp_add_plugin(KdlSolver KdlSolver.hpp DeviceDriverImpl.cpp ICartesianSolverImpl.cpp)
+
 TARGET_LINK_LIBRARIES(KdlSolver ${YARP_LIBRARIES} ${orocos_kdl_LIBRARIES})
-install(TARGETS KdlSolver DESTINATION lib)
+
+#install(TARGETS KdlSolver DESTINATION lib)
+yarp_install(TARGETS KdlSolver
+             EXPORT YARP
+             COMPONENT runtime
+             LIBRARY DESTINATION ${YARP_DYNAMIC_PLUGINS_INSTALL_DIR}
+             ARCHIVE DESTINATION ${YARP_STATIC_PLUGINS_INSTALL_DIR})
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
 #set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
