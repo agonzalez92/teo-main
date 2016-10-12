@@ -18,8 +18,8 @@ TARGET_LINK_LIBRARIES(FakeControlboard ${YARP_LIBRARIES})
 install(TARGETS FakeControlboard DESTINATION lib)
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
-set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
-set(TEO_LIBRARIES ${TEO_LIBRARIES} TeoYarp FakeControlboard CACHE INTERNAL "appended libraries") 
+#set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
+#set(TEO_LIBRARIES ${TEO_LIBRARIES} TeoYarp FakeControlboard CACHE INTERNAL "appended libraries") 
 
 ENDIF (NOT SKIP_FakeControlboard)
 

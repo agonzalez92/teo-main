@@ -19,8 +19,9 @@ TARGET_LINK_LIBRARIES(KdlSolver ${YARP_LIBRARIES} ${orocos_kdl_LIBRARIES})
 install(TARGETS KdlSolver DESTINATION lib)
 
 # Exporting dependencies for TEOConfig.cmake quite manually for now... 
-set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
-set(TEO_LIBRARIES ${TEO_LIBRARIES} TeoYarp KdlSolver ${orocos_kdl_LIBRARIES} CACHE INTERNAL "appended libraries")
+#set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "appended libraries")
+set(TEO_INCLUDE_DIRS ${TEO_INCLUDE_DIRS} ${orocos_kdl_INCLUDE_DIRS} CACHE INTERNAL "appended libraries")
+#set(TEO_LIBRARIES ${TEO_LIBRARIES} TeoYarp KdlSolver ${orocos_kdl_LIBRARIES} CACHE INTERNAL "appended libraries")
 
 ENDIF (NOT SKIP_KdlSolver)
 

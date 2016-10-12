@@ -13,6 +13,8 @@ endif(COMMAND cmake_policy)
 
 project(TEO)
 
+option(BUILD_SHARED_LIBS "All shared libs" TRUE)
+
 ### options: cpp libraries
 option(ENABLE_TeoYarp "Choose if you want to compile TeoYarp" TRUE)
 option(ENABLE_TrajectoryLib "Choose if you want to compile TrajectoryLib" TRUE)
