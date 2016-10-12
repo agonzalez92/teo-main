@@ -53,6 +53,8 @@ script:
   - cmake .. -DENABLE_coverage=ON
   - make
   - sudo make install
+  - sudo ldconfig
+  - yarp plugin --list
   - bin/testKdlSolver
   - bin/testKdlSolverFromFile
   - bin/testBasicCartesianControl
