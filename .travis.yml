@@ -57,7 +57,8 @@ script:
   - yarp plugin --list
   - yarp plugin --verbose KdlSolver
   - ldd /usr/local/lib/yarp/KdlSolver.so
-  - YARP_VERBOSE=1 bin/testKdlSolver
+  - export YARP_VERBOSE=1
+  - bin/testKdlSolver
   - bin/testKdlSolverFromFile
   - bin/testBasicCartesianControl
 
