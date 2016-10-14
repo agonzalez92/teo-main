@@ -8,6 +8,10 @@ compiler:
   - gcc
   - clang
 
+env:
+  global:
+    - YARP_VERBOSE=1
+
 before_install:
   - sudo add-apt-repository --yes ppa:kalakris/cmake
   - sudo apt-get update -qq  # -qq No output except for errors
@@ -57,7 +61,7 @@ script:
   - yarp plugin --list
   - yarp plugin --verbose KdlSolver
   - ldd /usr/local/lib/yarp/KdlSolver.so
-  - export YARP_VERBOSE=1
+  - echo $YARP_VERBOSE
   - bin/testKdlSolver
   - bin/testKdlSolverFromFile
   - bin/testBasicCartesianControl
