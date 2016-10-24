@@ -28,9 +28,9 @@ def main(env,options):
 
     #Load the ConvexDecomposition model, if it does not exit in the database generate it.
     if not cdmodel.load():
-        cdmodel.autogenerate()
+        #cdmodel.autogenerate()
         #If not already in the database. Generate
-        #cdmodel.generate(padding=0.02)
+        cdmodel.generate(padding=0.02)
 
     print 'The collision mesh normal robot is'
     print teo_robot.GetLinks()[1].GetGeometries()[0].GetCollisionMesh()
@@ -42,9 +42,9 @@ def main(env,options):
     #cdmodel.show()
 
     #setrobot sets the ConvexDecomposition model as the collision mesh of the robot.
-    #print 'Setting robot...'
-    #cdmodel.setrobot()
-    #print 'Finish setrobot'
+    print 'Setting robot...'
+    cdmodel.setrobot()
+    print 'Finish setrobot'
 
     print 'The collision mesh of the CD robot'
     print teo_robot.GetLinks()[1].GetGeometries()[0].GetCollisionMesh()
