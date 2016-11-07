@@ -43,6 +43,15 @@ bool teo::BasicTwoLimbCartesianControl::step()
 {
     CD_WARNING("STEP mode still experimental.\n");
 
+    iPositionControlA->setPositionMode();
+    iPositionControlB->setPositionMode();
+
+    iPositionControlA->positionMove(2,-15);
+    iPositionControlA->positionMove(3,30);
+    iPositionControlA->positionMove(4,-15);
+
+    yarp::os::Time::delay(3);
+
     // Initialize trajectory.
     trajectory = new GaitTrajectory();
 

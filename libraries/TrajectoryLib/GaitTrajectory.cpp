@@ -5,7 +5,8 @@ teo::GaitTrajectory::GaitTrajectory()
 {
 
     //revisar esos valores-->
-    steps = new GaitSupportPoligon(kin::Pose(0,-0.3,-1),kin::Pose(0,+0.3,-1));//<--revisar estos valores
+    //steps = new GaitSupportPoligon(kin::Pose(0,-0.1285,-0.845005),kin::Pose(0,+0.1285,-0.845005));//<--revisar estos valores
+    steps = new GaitSupportPoligon(kin::Pose(0.005836, -0.1285, -0.823906),kin::Pose(0,+0.1285,-0.845005));// -15,30,-15
     steps->SetSwingParameters(0.05,0.05); //(swing distance, swing height). revisar valores
     steps->SetSupportParameters(0.25); //(hip sideshift). revisar estos valores
     steps->AddStepForward(1);

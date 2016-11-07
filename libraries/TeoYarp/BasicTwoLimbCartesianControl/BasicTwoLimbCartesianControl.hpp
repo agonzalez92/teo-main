@@ -28,7 +28,7 @@
 #define DEFAULT_INIT_STATE VOCAB_CC_NOT_CONTROLLING
 #define DEFAULT_MS 50
 #define MAX_ANG_VEL 7.5
-#define DEFAULT_GAIN 1.0
+#define DEFAULT_GAIN 0.0  //-- Was 1.0, 0.0 good for sim.
 
 namespace teo
 {

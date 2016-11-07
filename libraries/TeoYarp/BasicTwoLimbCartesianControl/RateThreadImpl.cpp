@@ -35,6 +35,9 @@ void teo::BasicTwoLimbCartesianControl::run() {
         trajectory->getX(movementTime, desiredX);
         trajectory->getXdot(movementTime, desiredXdot);
 
+        desiredX[4] = 1.0;
+        desiredX[6] = 90.249966;
+
         CD_DEBUG_NO_HEADER("[STEP] [%f] x ",movementTime);
         for(int i=0;i<desiredX.size();i++)
             CD_DEBUG_NO_HEADER("%f ",desiredX[i]);
