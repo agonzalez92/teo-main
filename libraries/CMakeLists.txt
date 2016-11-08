@@ -28,3 +28,4 @@ add_subdirectory(TrajectoryLib)
 
 add_subdirectory(TeoYarp)
 
+add_subdirectory(TeoOpenrave)

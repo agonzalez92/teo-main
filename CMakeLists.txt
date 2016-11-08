@@ -15,6 +15,7 @@ project(TEO)
 
 ### options: cpp libraries
 option(ENABLE_TeoYarp "Choose if you want to compile TeoYarp" TRUE)
+option(ENABLE_TeoOpenrave "Choose if you want to compile TeoOpenrave" TRUE)
 option(ENABLE_TrajectoryLib "Choose if you want to compile TrajectoryLib" TRUE)
 
 ### options: cpp programs
