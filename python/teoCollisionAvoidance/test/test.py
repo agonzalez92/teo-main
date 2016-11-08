@@ -34,15 +34,15 @@ def main(env, options):
     print(cdmodel.getfilename())
 
     # Load the ConvexDecomposition model, if it does not exit in the database generate it.
-    if not cdmodel.load():
+    # if not cdmodel.load():
         # cdmodel.autogenerate()
         # If not already in the database. Generate
-        cdmodel.generate(padding=0.02)
+    #cdmodel.generate(padding=0.02)
 
     print 'The collision mesh normal robot is'
     print teo_robot.GetLinks()[1].GetGeometries()[0].GetCollisionMesh()
 
-    cdmodel.save()
+    #cdmodel.save()
     print 'Finished saving'
 
     # WARNING show stops the program
@@ -50,7 +50,7 @@ def main(env, options):
 
     # setrobot sets the ConvexDecomposition model as the collision mesh of the robot.
     print 'Setting robot...'
-    cdmodel.setrobot()
+    #cdmodel.setrobot()
     print 'Finish setrobot'
 
     print 'The collision mesh of the CD robot'
@@ -64,23 +64,8 @@ def main(env, options):
     else:
         print 'No self collision detected'
 
-    # ****************************************CheckConvexDecomposition example*******************************************
-    ab = teo_robot.ComputeAABB()
-    if samplingdelta is None:
-        samplingdelta = numpy.linalg.norm(ab.extents()) / 30.0
-    boxmin = ab.pos() - ab.extents()
-    boxmax = ab.pos() + ab.extents()
-    X, Y, Z = numpy.mgrid[boxmin[0]:boxmax[0]:samplingdelta, boxmin[1]:boxmax[1]:samplingdelta,
-              boxmin[2]:boxmax[2]:samplingdelta]
-    points = numpy.c_[X.flat, Y.flat, Z.flat]
-    print 'computing %d points...' % len(points)
-    inside = cdmodel.testPointsInside(points)
-    plottedpoints = points[numpy.flatnonzero(inside), :]
-    plottedpoints[:, 1] += ab.extents()[1] * 2
-    print '%d points are inside' % len(plottedpoints)
-    h = env.plot3(plottedpoints, 2)
-    if not options.testmode:
-        raw_input('press any key to exit')
+    while 1:
+        pass
 
 
 from optparse import OptionParser
@@ -96,7 +81,7 @@ def run(args=None):
         description='Builds the convex decomposition of the robot and plots all the points that are tested inside of it.')
     OpenRAVEGlobalArguments.addOptions(parser)
     parser.add_option('--target', action="store", type='string', dest='target',
-                      default='../../../share/openrave/teo/teo.robot.xml',
+                      default='/home/raul/repos/teo-main/share/openrave/teo/teo.robot.xml',
                       help='Target body to load (default=%default)')
     parser.add_option('--samplingdelta', action="store", type='float', dest='samplingdelta', default=None,
                       help='The sampling rate for the robot (default=%default)')
