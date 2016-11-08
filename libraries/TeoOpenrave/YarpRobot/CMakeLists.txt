@@ -28,7 +28,7 @@ macro(build_openrave_plugin name)
   add_library(${name} SHARED ${name}.cpp)
   set_target_properties(${name} PROPERTIES COMPILE_FLAGS "${OpenRAVE_CXX_FLAGS}")
   set_target_properties(${name} PROPERTIES LINK_FLAGS "${OpenRAVE_LINK_FLAGS}")
-  target_link_libraries(${name} ${YARP_LIBRARIES} ${OpenRAVE_LIBRARIES})
+  target_link_libraries(${name} ${YARP_LIBRARIES} ${OpenRAVE_LIBRARIES} TeoYarp )
   install(TARGETS ${name} DESTINATION bin )
 endmacro(build_openrave_plugin)
 

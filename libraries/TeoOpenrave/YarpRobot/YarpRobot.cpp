@@ -29,41 +29,24 @@
 #include <openrave/plugin.h>
 #include <boost/bind.hpp>
 
-#include <yarp/os/BufferedPort.h>
+#include <yarp/os/all.h>
+#include <yarp/dev/all.h>
 
 using namespace std;
 using namespace OpenRAVE;
 
-class ExternObjCallbackPort : public yarp::os::BufferedPort<yarp::os::Bottle> {
-  public:
-    void setObjPtr(KinBodyPtr objPtr) {
-        _objPtr = objPtr;
+YARP_DECLARE_PLUGINS(TeoYarp)
+
+class YarpRobot : public ModuleBase
+{
+public:
+    YarpRobot(EnvironmentBasePtr penv) : ModuleBase(penv) {
+        YARP_REGISTER_PLUGINS(TeoYarp);
+        __description = "YarpRobot plugin.";
+        RegisterCommand("open",boost::bind(&YarpRobot::Open, this,_1,_2),"opens port");
     }
 
-  protected:
-    /** KinBody object pointer. */
-    KinBodyPtr _objPtr;
-    
-    /** Implement the actual callback. */
-    void onRead(yarp::os::Bottle& b) {
-        //printf("[ExternObjCallbackPort] Got %s.\n", b.toString().c_str());
-        Transform T = _objPtr->GetTransform();
-        //printf("[ExternObjCallbackPort] success: object \"redCan\" exists and at %f %f %f.\n",T.trans.x,T.trans.y,T.trans.z);
-        T.trans.x = b.get(0).asDouble();  // [m]
-        T.trans.y = b.get(1).asDouble();  // [m]
-        T.trans.z = b.get(2).asDouble();  // [m]
-        _objPtr->SetTransform(T);
-    }
-};
-
-class ExternObj : public ModuleBase {
-  public:
-    ExternObj(EnvironmentBasePtr penv) : ModuleBase(penv) {
-        __description = "A very simple plugin.";
-        RegisterCommand("open",boost::bind(&ExternObj::Open, this,_1,_2),"opens port");
-    }
-
-    virtual ~ExternObj() {
+    virtual ~YarpRobot() {
     }
 
     void Destroy() {
@@ -76,34 +59,73 @@ class ExternObj : public ModuleBase {
     }
 
     bool Open(ostream& sout, istream& sinput) {
-        _objPtr = GetEnv()->GetKinBody("redCan");
-        if(!_objPtr) {
-           fprintf(stderr,"[ExternObj] success: object \"redCan\" does not exist.\n");
-        }
-        Transform T = _objPtr->GetTransform();
-        printf("[ExternObj] success: object \"redCan\" exists and at %f %f %f.\n",T.trans.x,T.trans.y,T.trans.z);
 
-        _externObjCallbackPort.setObjPtr(_objPtr);
-        bool bSuccess = _externObjCallbackPort.open("/ravebot/externobj/command:i");
-        _externObjCallbackPort.useCallback();
-        sout << "response";
-        return bSuccess;
+        sout << "Hello" << endl;
+
+        //-- Get robots
+        std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
+        GetEnv()->GetRobots(vectorOfRobotPtr);
+
+        //-- For each robot
+        for(size_t robotPtrIdx=0;robotPtrIdx<vectorOfRobotPtr.size();robotPtrIdx++)
+        {
+            RAVELOG_INFO( "Robots[%zu]: %s\n",robotPtrIdx,vectorOfRobotPtr[robotPtrIdx]->GetName().c_str());
+
+            //-- Get manipulators
+            std::vector<OpenRAVE::RobotBase::ManipulatorPtr> vectorOfManipulatorPtr = vectorOfRobotPtr[robotPtrIdx]->GetManipulators();
+
+            //-- For each manipulator
+            for(size_t manipulatorPtrIdx=0;manipulatorPtrIdx<vectorOfManipulatorPtr.size();manipulatorPtrIdx++)
+            {
+                RAVELOG_INFO( "* Manipulators[%zu]: %s\n",manipulatorPtrIdx,vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName().c_str() );
+
+                //-- Formulate the manipulator port name
+                std::string manipulatorPortName("/");
+                manipulatorPortName += vectorOfRobotPtr[robotPtrIdx]->GetName();
+                manipulatorPortName += "/";
+                manipulatorPortName += vectorOfManipulatorPtr[manipulatorPtrIdx]->GetName();
+                RAVELOG_INFO( "* manipulatorPortName: %s\n",manipulatorPortName.c_str() );
+
+                yarp::dev::PolyDriver* robotDevice = new yarp::dev::PolyDriver;
+                yarp::os::Property options;
+                options.put("device","controlboardwrapper2");  //-- ports
+                options.put("subdevice","FakeControlboardOR");
+                options.put("name", manipulatorPortName );
+
+                RAVELOG_INFO("penv: %p\n",GetEnv().get());
+                OpenRAVE::EnvironmentBase* penv_raw = GetEnv().get();
+                yarp::os::Value v(&penv_raw, sizeof(OpenRAVE::EnvironmentBase*));
+                options.put("penv",v);
+
+                options.put("robotIndex",static_cast<int>(robotPtrIdx));
+                options.put("manipulatorIndex",static_cast<int>(manipulatorPtrIdx));
+
+                robotDevice->open(options);
+                if( ! robotDevice->isValid() )
+                {
+                    RAVELOG_INFO("Bad\n");
+                    return false;
+                }
+                robotDevices.push_back( robotDevice );
+            }
+        }
+        return true;
     }
 
-  protected:
-    ExternObjCallbackPort _externObjCallbackPort;
-    KinBodyPtr _objPtr;
+private:
+    yarp::os::Network yarp;
+    std::vector< yarp::dev::PolyDriver* > robotDevices;
 };
 
 InterfaceBasePtr CreateInterfaceValidated(InterfaceType type, const std::string& interfacename, std::istream& sinput, EnvironmentBasePtr penv) {
-    if( type == PT_Module && interfacename == "externobj" ) {
-        return InterfaceBasePtr(new ExternObj(penv));
+    if( type == PT_Module && interfacename == "yarprobot" ) {
+        return InterfaceBasePtr(new YarpRobot(penv));
     }
     return InterfaceBasePtr();
 }
 
 void GetPluginAttributesValidated(PLUGININFO& info) {
-    info.interfacenames[PT_Module].push_back("ExternObj");
+    info.interfacenames[PT_Module].push_back("YarpRobot");
 }
 
 OPENRAVE_PLUGIN_API void DestroyPlugin() {
