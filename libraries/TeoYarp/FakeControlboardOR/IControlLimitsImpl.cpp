@@ -5,6 +5,7 @@
 // ------------------- IControlLimits Related ------------------------------------
 
 bool teo::FakeControlboardOR::setLimits(int axis, double min, double max) {
+    CD_INFO("\n");
     if(axis>=int(axes)) return false;
     minLimit[axis] = min;
     maxLimit[axis] = max;
@@ -15,6 +16,7 @@ bool teo::FakeControlboardOR::setLimits(int axis, double min, double max) {
 // -----------------------------------------------------------------------------
 
 bool teo::FakeControlboardOR::getLimits(int axis, double *min, double *max) {
+    CD_INFO("\n");
     if(axis>=int(axes)) return false;
     *min = minLimit[axis];
     *max = maxLimit[axis];

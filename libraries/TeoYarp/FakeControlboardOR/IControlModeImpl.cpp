@@ -49,7 +49,7 @@ bool teo::FakeControlboardOR::setOpenLoopMode(int j) {
 // -----------------------------------------------------------------------------
 
 bool teo::FakeControlboardOR::getControlMode(int j, int *mode) {
-    // CD_DEBUG("\n");  //-- Way too verbose.
+    //CD_DEBUG("\n");  //-- Way too verbose.
     if(modePosVel == 0)
         *mode = VOCAB_CM_POSITION;
     else if (modePosVel == 1)

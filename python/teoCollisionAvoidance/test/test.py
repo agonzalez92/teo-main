@@ -1,14 +1,20 @@
 import openravepy
-from openravepy import databases
+from openravepy import *
 import numpy
 
 
 def main(env, options):
     """Main example code"""
     samplingdelta = options.samplingdelta
+    RaveLoadPlugin('./YarpRobot')
     # Load the teo robot
     env.Load(options.target)
     teo_robot = env.GetRobots()[0]
+
+
+    # Open YarpRobot plugin ports
+    YarpRobot = RaveCreateModule(env,'YarpRobot')
+    print YarpRobot.SendCommand('open')
 
     print 'The collision mesh normal robot (no CD) is'
     print teo_robot.GetLinks()[1].GetGeometries()[0].GetCollisionMesh()

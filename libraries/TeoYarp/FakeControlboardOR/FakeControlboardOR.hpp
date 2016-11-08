@@ -23,21 +23,6 @@
 
 #define DEFAULT_AXES 5
 
-#define DEFAULT_EXTRA_ROBOT "none"
-#define DEFAULT_EXTERN_OBJ "none"
-#define DEFAULT_GEN_ENC_RAW_EXPOSED 0.0174532925199433  // Ratio, 0.0174532925199433 is pi/180 (raw/exp)<->(rad/deg)
-#define DEFAULT_GEN_INIT_POS 0  // Exposed.
-#define DEFAULT_GEN_JOINT_TOL 0.25  // Exposed.
-#define DEFAULT_GEN_MAX_LIMIT 180.0  // Exposed.
-#define DEFAULT_GEN_MIN_LIMIT -180.0  // Exposed.
-#define DEFAULT_GEN_REF_SPEED 7.5  // Exposed.
-#define DEFAULT_GEN_VEL_RAW_EXPOSED 0.0174532925199433  // Ratio, 0.0174532925199433 is pi/180 (raw/exp)<->(rad/deg)
-#define DEFAULT_JMC_MS 20  // [ms]
-#define DEFAULT_JMC_MS_ACC 1  // multiplier
-#define DEFAULT_MODE_POS_VEL 0  // 0=Position, 1=Velocity.
-
-
-
 namespace teo
 {
 
@@ -62,11 +47,11 @@ namespace teo
 // Note: IPositionControl2 inherits from IPositionControl
 // Note: IVelocityControl2 inherits from IVelocityControl
 class FakeControlboardOR : public yarp::dev::DeviceDriver, public yarp::dev::IPositionControl2, public yarp::dev::IVelocityControl2, public yarp::dev::IEncodersTimed,
-                 public yarp::dev::IControlLimits, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl, public yarp::os::RateThread {
+                 public yarp::dev::IControlLimits, public yarp::dev::IControlMode, public yarp::dev::ITorqueControl {
     public:
 
         // Set the Thread Rate in the class constructor
-        FakeControlboardOR() : RateThread(DEFAULT_JMC_MS) {}  // In ms
+        FakeControlboardOR() {}
 
     // ------- IPositionControl declarations. Implementation in IPositionImpl.cpp -------
 
@@ -766,7 +751,12 @@ class FakeControlboardOR : public yarp::dev::DeviceDriver, public yarp::dev::IPo
          * thread itself (device drivers initialization, memory
          * allocation etc). If the function returns false the thread
          * quits and never calls "run". The return value of threadInit()
-         * is notified to the class and passed as a parameter
+         * is notified to the class and passed as a parameter    // ----- Shared Area Funcion declarations. Implementation in SharedArea.cpp -----
+
+        void setEncRaw(const int Index, const double Position);
+        double getEncRaw(const int Index);
+        double getEncExposed(const int Index);
+
          * to afterStart(). Note that afterStart() is called by the
          * same thread that is executing the "start" method.
          */
@@ -777,12 +767,6 @@ class FakeControlboardOR : public yarp::dev::DeviceDriver, public yarp::dev::IPo
          */
         void run();
 
-    // ----- Shared Area Funcion declarations. Implementation in SharedArea.cpp -----
-
-        void setEncRaw(const int Index, const double Position);
-        double getEncRaw(const int Index);
-        double getEncExposed(const int Index);
-
     // ------------------------------- Private -------------------------------------
 
     private:
@@ -792,7 +776,6 @@ class FakeControlboardOR : public yarp::dev::DeviceDriver, public yarp::dev::IPo
         //
         int modePosVel;
         double lastTime;
-        yarp::os::Semaphore encRawMutex;  // SharedArea
         std::vector<double> encRaw;
         std::vector<double> encRawExposed;  // For conversion.
         std::vector<int> jointStatus;
@@ -810,7 +793,9 @@ class FakeControlboardOR : public yarp::dev::DeviceDriver, public yarp::dev::IPo
         //OpenRAVE//
         OpenRAVE::EnvironmentBase* penv;
         OpenRAVE::RobotBasePtr probot;
-        //OpenRAVE::EnvironmentBasePtr penvreal;
+        std::vector< int > manipulatorIDs;
+        std::vector<OpenRAVE::dReal> dEncRaw;
+
 
 };
 

@@ -71,6 +71,7 @@ bool teo::FakeControlboardOR::stop(const int n_joint, const int *joints)
 
 bool teo::FakeControlboardOR::getTargetPosition(const int joint, double *ref)
 {
+    CD_INFO("\n");
     return true;
 }
 

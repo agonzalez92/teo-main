@@ -62,6 +62,9 @@ public:
 
         sout << "Hello" << endl;
 
+        RAVELOG_INFO("penv: %p\n",GetEnv().get());
+        OpenRAVE::EnvironmentBase* penv_raw = GetEnv().get();
+
         //-- Get robots
         std::vector<OpenRAVE::RobotBasePtr> vectorOfRobotPtr;
         GetEnv()->GetRobots(vectorOfRobotPtr);
@@ -90,15 +93,20 @@ public:
                 yarp::os::Property options;
                 options.put("device","controlboardwrapper2");  //-- ports
                 options.put("subdevice","FakeControlboardOR");
+                //options.put("device","FakeControlboardOR");
                 options.put("name", manipulatorPortName );
 
-                RAVELOG_INFO("penv: %p\n",GetEnv().get());
-                OpenRAVE::EnvironmentBase* penv_raw = GetEnv().get();
+                RAVELOG_INFO( " 1 \n" );
+
                 yarp::os::Value v(&penv_raw, sizeof(OpenRAVE::EnvironmentBase*));
                 options.put("penv",v);
 
+                RAVELOG_INFO( " 2 \n" );
+
                 options.put("robotIndex",static_cast<int>(robotPtrIdx));
                 options.put("manipulatorIndex",static_cast<int>(manipulatorPtrIdx));
+
+                RAVELOG_INFO( " 3 \n" );
 
                 robotDevice->open(options);
                 if( ! robotDevice->isValid() )

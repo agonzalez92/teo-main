@@ -6,7 +6,6 @@
 
 bool teo::FakeControlboardOR::getEncodersTimed(double *encs, double *time) {
     //CD_INFO("\n");  //-- Way too verbose
-
     bool ok = true;
     for(unsigned int i=0; i < axes; i++)
         ok &= getEncoderTimed(i,&(encs[i]),&(time[i]));

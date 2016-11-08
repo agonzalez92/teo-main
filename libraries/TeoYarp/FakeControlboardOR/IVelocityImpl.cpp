@@ -15,6 +15,7 @@ bool teo::FakeControlboardOR::setVelocityMode() {
 // -----------------------------------------------------------------------------
 
 bool teo::FakeControlboardOR::velocityMove(int j, double sp) {  // velExposed = sp;
+    CD_INFO("\n");
     if ((unsigned int)j>axes) return false;
     if(modePosVel!=1) {  // Check if we are in velocity mode.
         fprintf(stderr,"[FakeControlboardOR] fail: FakeControlboardOR will not velocityMove as not in velocityMode\n");
@@ -28,6 +29,7 @@ bool teo::FakeControlboardOR::velocityMove(int j, double sp) {  // velExposed = 
 // -----------------------------------------------------------------------------
 
 bool teo::FakeControlboardOR::velocityMove(const double *sp) {
+    CD_INFO("\n");
     printf("[FakeControlboardOR] Vel:");
     for (unsigned int i=0; i<axes; i++) printf(" %+.6f",velRaw[i]);
     printf("\n");
